@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+  <head>
+    <title>P251 Purpose</title>
+    <meta name="generator" content="muse.el">
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=iso-8859-1">
+    <style type="text/css">
+body {
+  background: black; color: white;
+  margin-left: 3%; margin-right: 7%;
+}
+
+p { margin-top: 1% }
+p.verse { margin-left: 3% }
+
+.example { margin-left: 3% }
+
+h2 {
+  margin-top: 25px;
+  margin-bottom: 0px;
+}
+h3 { margin-bottom: 0px; }
+    </style>
+  </head>
+  <body>
+
+    <!-- Page published by Emacs Muse begins here -->
+<p>The classes in the P251 package are to abstract many of the details of
+java applets and java swing so that you can focus on the chaos rather
+than the details of java.  This is meant to be a brief
+overview of the package, not to replace the API.</p>
+
+<h2>P251Applet</h2>
+
+<p class="first">The P251Applet class is an abstract class that extends JApplet. P251Applet
+implements the applet milestone functions, abstracts the use of
+threads, and provides a skeleton for the applets to be used in this
+class.  To use P251Applet you must extend it and override the
+member methods fillPanels() and compute().</p>
+<h3>Layout</h3>
+
+<p class="first">The applet has two main regions, a region for input and output panels
+(see below) and a region for buttons.  P251Applet starts with the top
+panel region empty and includes five buttons by default.  Components
+can be added to these regions by calling the addPanel and addButton
+functions from fillPanels().</p>
+
+
+<h3>Default Buttons</h3>
+
+<dl>
+<dt><strong>Read Input</strong></dt>
+<dd>Calls the readValues() method on P251Applet.  If the
+default method has not been overridden, then this will do nothing.
+This is intended to be used with the inputPanel class.</dd>
+
+<dt><strong>Start Computation</strong></dt>
+<dd>This button causes the applet to spawn a thread
+and execute the code defined in the function compute(). This thread
+will run until compute returns, either by completing or by being
+interrupted.  The P251Applet will take care of cleaning up the thread.</dd>
+
+<dt><strong>Interrupt Computation</strong></dt>
+<dd>This will stop a running computation if the
+proper code has been include in compute() to listen for interrupt
+signals.</dd>
+
+<dt><strong>Clear display</strong></dt>
+<dd>This will call the clear() function on all the panel
+objects that have been added via addPanel.  This will not effect the internal
+variables of your applet, only what the applet displays.</dd>
+
+<dt><strong>Re-Initialize</strong></dt>
+<dd>Calls the initValue() function.  This can be used
+to return your applet to a pre-defined state with out having to reload the
+applet.</dd>
+</dl>
+
+
+<h3>Additional buttons</h3>
+
+<p class="first">To add additional buttons to the applet use code of this form:</p>
+
+<pre class="src">
+<span style="color: #a020f0;">private</span> <span style="color: #228b22;">ActionListener</span> <span style="color: #b8860b;">myListener</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">ActionListener</span>(){
+    <span style="color: #a020f0;">public</span> <span style="color: #228b22;">void</span> <span style="color: #0000ff;">actionPerformed</span>(<span style="color: #228b22;">ActionEvent</span> <span style="color: #b8860b;">event</span>)
+    {
+        <span style="color: #b22222;">// </span><span style="color: #b22222;">What ever you want the button to do
+</span>    }
+};
+
+<span style="color: #a020f0;">public</span> <span style="color: #228b22;">void</span> <span style="color: #0000ff;">fillPanels</span>(){
+    <span style="color: #b22222;">//</span><span style="color: #b22222;">other code
+</span>    <span style="color: #228b22;">JButton</span> <span style="color: #b8860b;">myButton</span> = <span style="color: #a020f0;">new</span> <span style="color: #228b22;">JButton</span>(<span style="color: #bc8f8f;">"my button text"</span>);
+    myButton.addActionListener(myListener);
+    addButton(myButton);
+    <span style="color: #b22222;">//</span><span style="color: #b22222;">other code
+</span>}
+</pre>
+
+
+<h3>Threads</h3>
+
+<p class="first">Threading allows the computer to do multiple tasks at once.   For our
+purposes, separating the computation from the display processes allowing.
+The details of implementing threads in java has been mostly abstracted by P251Applet,
+however for the interrupt  button to work the compute() function must be of
+the form:</p>
+
+<pre class="src">
+<span style="color: #a020f0;">public</span> <span style="color: #228b22;">void</span> <span style="color: #0000ff;">compute</span>(){
+    <span style="color: #b22222;">//</span><span style="color: #b22222;">other code
+</span>    <span style="color: #a020f0;">while</span>(long_loop_cond){
+        <span style="color: #b22222;">//</span><span style="color: #b22222;">other code
+</span>        <span style="color: #a020f0;">if</span> (Thread.interrupted()) {
+            ip.setValue(0,r);
+            <span style="color: #a020f0;">return</span> ;
+        }
+    }
+    <span style="color: #b22222;">//</span><span style="color: #b22222;">other code
+</span>}
+</pre>
+
+
+
+
+<h2>Panel classes</h2>
+
+<dl>
+<dt><strong>drawPanel</strong></dt>
+<dd>a wrapper around the methods of the graphics objects.
+Only a sub set of the available functions have been wrapped.  If you
+really want a particular function, then ask.</dd>
+
+<dt><strong>graphPanel</strong></dt>
+<dd>a wrapper for a large graphing library.  Again, only a subset
+of the capabilities have been wrapped, if you want to do something that
+isn't wrapped ask.</dd>
+
+<dt><strong>inputPanel</strong></dt>
+<dd>provides input fields</dd>
+
+<dt><strong>pixPanel</strong></dt>
+<dd>provides a canvas for bitmap drawing</dd>
+
+<dt><strong>outputPanel</strong></dt>
+<dd>outputs text to the screen in a sensible way</dd>
+</dl>
+
+
+
+<!-- Page published by Emacs Muse ends here -->
+  </body>
+</html>
