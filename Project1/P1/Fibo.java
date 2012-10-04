@@ -20,13 +20,13 @@ public class Fibo extends Applet
 
 	i=1;
 	j=1;
-        System.out.println(" 0 -- 1 -- 1 ");
+        System.out.println(" 0,1,1 ");
 
 	for (n=1; n<=nsteps; n++)
 	{
 	    k = i+j;
 	    r = (double) k / (double) j;
-	    System.out.println(" " + n + " -- " + k + " -- " + r );
+	    System.out.println(" " + n + "," + k + "," + r );
 	    i = j;
 	    j = k;
 	}

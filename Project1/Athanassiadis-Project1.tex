@@ -1,15 +1,12 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Lab report writeup based on template by Derek Hildreth
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %\documentclass[aps,letterpape,10pt]{revtex4}
 \documentclass[aps,letterpaper,10pt]{article}
 %\documentclass{article}
 
 \usepackage{graphicx} % For images
 \usepackage{float}    % For tables and other floats
-\usepackage{verbatim} % For comments and other
+%\usepackage{verbatim} % For comments and other
 \usepackage{amsmath}  % For math
+\usepackage{amsthm}     % For more math and proofs
 \usepackage{amssymb}  % For more math
 \usepackage{fullpage} % Set margins and place page numbers at bottom center
 \usepackage{subfig}   % For subfigures
@@ -17,14 +14,13 @@
 \usepackage{fancyhdr} %headers
 \usepackage{listings} %for code
 \usepackage{color} %to color code
-\usepackage{wrapfig} % for inline images
+%\usepackage{wrapfig} % for inline images
 
 %Color and code setup
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \definecolor{codebg}{rgb}{.95,.95,.98}
-
 \lstset{ %
 	language=Java,
 	tabsize=4, 
@@ -47,9 +43,9 @@
 
 %HEADER FORMATING%%%%%%%%%%%%%
 \pagestyle{fancy}
-\headheight 10pt
+\headheight 24pt
 \setlength{\headsep}{20pt}
-\lhead{PHYS 251 - Prof. Tom Witten \\ Project 1}
+\lhead{PHYS 251 - Prof. Tom Witten\\Project 1}
 \rhead{A. Athanassiadis\\Due 10/8/2012}
 %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -58,20 +54,75 @@
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
+
 \section{Problem 1}
-\begin{figure}[!h]
-\centering
-\subfloat[Original Image]{\label{fig:5-1a}\includegraphics[width=.30\textwidth]{img_distance.png}}\hspace{20px}
-\subfloat[Distance-Mapped Image]{\label{fig:5-1b}\includegraphics[width=.30\textwidth]{5-1a.png}} \hspace{20px}
-\subfloat[Overlay Image]{\label{fig:5-1c}\includegraphics[width=.30\textwidth]{5-1b.png}}
-\caption{2-Pass Distance Transform}
-\label{fig:5-1}
-\end{figure}
 
-In this problem, I applied the two-pass distance transformation as described in class.  Figure \ref{fig:5-1a} shows the original image.  Figure \ref{fig:5-1b} shows the output of the output of the distance transform.  Figure \ref{fig:5-1c} shows an overlay of the two to confirm appropriate output.  The code used for this problem is contained in \ttt{problem1.py} and \ttt{distT.py}
+The golden ratio is defined as $\phi = \frac{a}{b} = \frac{a + b}{a}$. This ratio can be solved for algebraically:
+\begin{eqnarray*}
+  a^2 & = & ab + b^2 \\
+  a^2 - ab - b^2 & = & 0\\
+  a & = & \frac{b \pm \sqrt{b^2 + 4b^2}}{2}\\
+  \phi =  \frac{a}{b} & = & \frac{1 + \sqrt{5}}{2}.
+\end{eqnarray*}
 
-\lstinputlisting{problem1.py}
+In the last step, the plus sign was taken in order to keep with the definition that $\phi>0$.\\
+
+The Fibonacci sequence is given by 
+\begin{displaymath}
+  f(n) = \left\{
+  \begin{array}{ll}
+    1 &  n=0,1\\
+    f(n-1) + f(n-2) & n>1
+  \end{array}\right.
+\end{displaymath}
+
+Consider the ratio $$r(n) = \frac{f(n)}{f(n-1)}.$$ Assume that $\lim_{n\to\infty}r(n)=c$. Claim that $c=\phi$.\\
+
+%% could be done formally with \epsilon-\delta
+\begin{proof}
+({\em Informal}) As $n$ is arbitrarily large, additionally assume $$\frac{f(n+1)}{f(n)} = \frac{f(n)}{f(n-1)} = c.$$ Then,
+\begin{eqnarray*}
+  c & = & \frac{f(n+1)}{f(n)}\\
+    & = & \frac{f(n-1) + f(n)}{f(n)}\\
+    & = & \frac{1}{c} + 1\\
+  c^2 - c - 1 & = & 0\\
+  c & = & \frac{1 + \sqrt{5}}{2}\\
+  c & = & \phi
+\end{eqnarray*}
+\end{proof}
+
 \newpage
-\lstinputlisting{distT.py}
+\section{Problem 2}
+This part was different.
+For this problem, I modified the source code from Problem 1 to calculate $|\phi - r(n)|$ (modified source code included below and in folder). This difference should approach zero as n gets large, as indicated by the previous proof. The results of this calculation are plotted in Figure \ref{fig: convergence}. 
 
-\end{document} 
+
+
+As expected, $r(n)$ converges to $\phi$ exponentially with a fitted decay constant of $VALUE$.
+
+
+
+\newpage
+\lstinputlisting{P2/Fibo.java}
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Reference for figures and source code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%
+%% \begin{figure}[!h]
+%% \centering
+%% \subfloat[Original Image]{\label{fig:5-1a}\includegraphics[width=.30\textwidth]{img_distance.png}}\hspace{20px}
+%% \subfloat[Distance-Mapped Image]{\label{fig:5-1b}\includegraphics[width=.30\textwidth]{5-1a.png}} \hspace{20px}
+%% \subfloat[Overlay Image]{\label{fig:5-1c}\includegraphics[width=.30\textwidth]{5-1b.png}}
+%% \caption{2-Pass Distance Transform}
+%% \label{fig:5-1}
+%% \end{figure}
+
+%% In this problem, I applied the two-pass distance transformation as described in class.  Figure \ref{fig:5-1a} shows the original image.  Figure \ref{fig:5-1b} shows the output of the output of the distance transform.  Figure \ref{fig:5-1c} shows an overlay of the two to confirm appropriate output.  The code used for this problem is contained in \ttt{problem1.py} and \ttt{distT.py}
+
+%% \lstinputlisting{problem1.py}
+%% \newpage
+%% \lstinputlisting{distT.py}
