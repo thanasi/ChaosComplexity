@@ -1,4 +1,4 @@
-// fibo.java
+// Fibo.java
 // fibonacci java class
 // write out fibonacci sequence and ratio
 // Athanasios Athanassiadis

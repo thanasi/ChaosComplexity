@@ -112,17 +112,33 @@ You should also save the results to a file. This file should be handed in with t
 \end{minipage}
 \end{center}
 
-This part was different.
-For this problem, I modified the source code from Problem 1 to calculate $|\phi - r(n)|$ (modified source code included below and in folder). This difference should approach zero as n gets large, as indicated by the previous proof. The results of this calculation are plotted in Figure \ref{fig: convergence}. 
+For this problem, I modified the source code from Problem 1 to calculate $|\phi - r(n)|$ (modified source code included below and in folder P2). This difference should approach zero as n gets large, as indicated by the previous proof. The results of this calculation are plotted in Figure \ref{fig: convergence}. 
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=.8\textwidth]{P2/output.png}
+\caption{Convergence Plot}
+\label{fig: convergence}
+\end{figure}
 
-As expected, $r(n)$ converges to $\phi$ exponentially with a fitted decay constant of $VALUE$.
+As expected, $r(n)$ converges to $\phi$ exponentially with a fitted decay constant of $\delta = -0.964$. Thus,$$r(n) = -.133e^{-.964n}.$$
+\newpage
 
+\section{Drawing}
+Figure \ref{fig: draw} a screenshot of the drawing I made using the P251 helper class. The .java file I used to produce this is listed below Fibo.java.
 
+\begin{figure}[!h]
+\centering
+\includegraphics[width=.8\textwidth]{Draw/draw.png}
+\caption{Screenshot of drawing}
+\label{fig: draw}
+\end{figure}
 
 \newpage
+\section{Appendix: Source Code}
 \lstinputlisting{P2/Fibo.java}
-
+\newpage
+\lstinputlisting{Draw/Drawing.java}
 \end{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
