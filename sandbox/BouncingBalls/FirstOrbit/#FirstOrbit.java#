@@ -1,0 +1,26 @@
+// Bou.java
+//
+import javax.swing.*;
+import P251.*;
+public class FirstOrbit extends P251Applet
+{
+    private drawPanel dp; 
+    // declare variables
+    int iold, jold, inew, jnew; // x and y coordinates of particle at beginning
+    // and end of a flight between bounces
+    int di; // advance of i in each bounce
+    
+    public void compute() // compute is executed when the corresponding applet button is pressed
+    {
+	
+
+        dp.repaint();
+    }
+    
+    public void fillPanels() // specifies and outputs the drawing panel object to the applet
+    {
+        dp = new drawPanel(220,200); 
+        dp.setDrawBounds(0,0,220,200);
+        addPanel(dp);
+    } // end of fillPanels
+} // end of applet
