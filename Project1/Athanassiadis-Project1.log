@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.6.2)  5 OCT 2012 16:04
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.6.2)  5 OCT 2012 19:00
 entering extended mode
  %&-line parsing enabled.
 **\nonstopmode\input Athanassiadis-Project1.tex
@@ -308,25 +308,38 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 65.
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
+Overfull \hbox (12.79999pt too wide) in paragraph at lines 65--70
+[][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--85
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 91--92
+Underfull \hbox (badness 10000) in paragraph at lines 95--96
 
  []
 
 [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 ]
+Overfull \hbox (12.79999pt too wide) in paragraph at lines 114--120
+[][] 
+ []
+
 <P2/output.png, id=14, 586.8324pt x 442.2924pt>
 File: P2/output.png Graphic file (type png)
- <use P2/output.png> [2 <./P2/output.png>] <Draw/draw.png, id=20, 674.52pt x 61
-1.28375pt>
+ <use P2/output.png>
+Overfull \hbox (29.4963pt too wide) in paragraph at lines 134--179
+[][] 
+ []
+
+[2 <./P2/output.png>] <Draw/draw.png, id=21, 674.52pt x 611.28375pt>
 File: Draw/draw.png Graphic file (type png)
- <use Draw/draw.png>
-[3 <./Draw/draw.png (PNG copy)>] (./P2/Fibo.java
+
+<use Draw/draw.png> [3 <./Draw/draw.png (PNG copy)>] (./P2/Fibo.java
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 11.
 
 (/usr/share/texmf-texlive/tex/latex/base/omscmr.fd
@@ -350,7 +363,7 @@ Here is how much of TeX's memory you used:
  8500 multiletter control sequences out of 15000+50000
  9560 words of font info for 38 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 44i,11n,43p,866b,1210s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 44i,14n,43p,866b,1210s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/share/texmf-texlive/fonts/type1/publi
 c/amsfonts/cm/cmbx12.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/
 cm/cmex10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.p
@@ -364,7 +377,7 @@ r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texm
 f-texlive/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/share/texmf-texlive/fo
 nts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texmf-texlive/fonts/type1/p
 ublic/amsfonts/cm/cmtt10.pfb>
-Output written on Athanassiadis-Project1.pdf (5 pages, 194513 bytes).
+Output written on Athanassiadis-Project1.pdf (5 pages, 196711 bytes).
 PDF statistics:
  78 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
