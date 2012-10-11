@@ -26,8 +26,10 @@ public class LogisticMap extends P251Applet {
 
     double f (double x)
     {
-	return R * x * (1 - x);
-	// return R * (-1 * Math.abs(x-.5) + 1);
+	// return R * x * (1 - x);
+	// return R * (-1 * Math.abs(x-.5) + .5);
+	return R * .25 * x * (1 - x) * (2 - x) * (3 - x);
+	
     }
       
     public void fillPanels() {
@@ -92,6 +94,8 @@ public class LogisticMap extends P251Applet {
     public void compute()
     {
 
+	gp1.setDotSize(1);
+	gp2.setDotSize(1);
 	R = R0;
 	while (R < rMax) {
 	    
@@ -106,16 +110,12 @@ public class LogisticMap extends P251Applet {
 		RR[i] = R;
 	    }
 
-	    gp1.setDotSize(3);
 	    gp1.addData(XX,YY, "DataPoints");
-
-	    gp2.setDotSize(1);
 	    gp2.addData(RR,XX, "rData");
 
 	    R += rStep;
 
 	    if (Thread.interrupted()) return;
-
 	}
     }
 
@@ -134,8 +134,9 @@ public class LogisticMap extends P251Applet {
 	
 	gp1.clear();
 	gp1.setDotSize(1);
-	gp1.addData(x, x, "xxplot");
 	gp1.addData(x, y, "fplot");
+	gp1.addData(x, x, "xxplot");
+	
     }
     
 }
