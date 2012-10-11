@@ -83,9 +83,8 @@ void compute() {
     for (int i=0; i<nIterX; i++) {
       // graph1.plotPoint(X, f(X, R));
       X = f(X, R);
+      if (nIterX-i < 100) graph2.plotPoint(R, X);
     }  
-
-    graph2.plotPoint(R, X);
   }
 }
 
