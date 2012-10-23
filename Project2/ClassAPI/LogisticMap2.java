@@ -108,40 +108,6 @@ public class LogisticMap2 extends P251Applet {
 	return root(x0, n, defaultTolerance);
     }
 
-    /* caught in a conundrum - need fixed points to determine rootd
-       need rootd to find fixed points more accurately 
-    double rootd ( double r0, double fp, int n, double tol) {
-	// find where the first derivative of the nth iterate of f = -1
-	// using newton-raphson root method
-
-	double x = r0;
-	double delta;
-	int i = 0;
-	do {
-	    // solving f'(x)=-1
-	    delta = - (dfdx(x,n)+1 - x) / (dfdx(x, n, 2)-1); 
-
-	    // update x (we'd be here a while if we didn't)
-	    r += delta;
-
-	    if (i >= iterMax) break;  // if we've tried too hard, then give up
-	    i++;
-	} while (Math.abs(delta)>tol);
-
-	if (i==iterMax) x = Double.NaN;	
-
-	System.out.println(String.format("\nFound r that causes instability in %d iterate of f:\t %6.4f --> %6.4f", n, x0, x));
-
-	return x;
-    }
-
-    double rootd (double x0, int n) {
-	// overload with default tolerance
-	return rootd(x0, n, defaultTolerance);
-    }
-
-    */
-
     double [] getLastValues(int n, int num, int nit) {
 	// get the last num values of the nth iterate of f
 	// after iterating nit times
@@ -149,20 +115,14 @@ public class LogisticMap2 extends P251Applet {
 	X = X0;
 	for (int i=0; i<nit; i++) {
 	    X = iterf(X, n);
-	    if (i>nit-num) output[i + num - nit - 1] = X;
+	    if (i>nit-num-1) {
+		output[i + num - nit] = X;
+		//		System.out.println("getLastValues " + n + " " + num + " " + nit + " >> " + X);
+	    }
 	}
 	return output;	
     }
    
-    /*
-    double findInstability(double r0, int n) {
-	// find the R value where the nth iterate of f goes unstable
-	// instability onsets when f(n)'=-1
-
-	return rootd(r0, n);
-    }
-    */
-
     double [] findFixedPoints(double [] guess) {
 	// find the fixed points of an iterative of f
 	// the iterative is determined by the length of the guess array
@@ -348,28 +308,16 @@ public class LogisticMap2 extends P251Applet {
 	// find stable values of 2-cycles and 4-cycles
 	// determine guesses for X by iterating the function nIter times
 	// then run it through Newton-Raphson and plot to verify
-	R = R1; //findInstability(R1, 2);
-	double [] cycle2Guess = getLastValues(1,2,nIter);
+	R = R1;
+	double [] cycle2Guess = getLastValues(1,2,10);
 	double [] cycle2 = findFixedPoints(cycle2Guess);
-	for (int i=0; i<2; i++) {
-	    // RR2[i] = R;
-	    hLine(cycle2[i], R0, rMax, gp2);
-	}
-	vLine(R, 0, 1, gp2);
-	// gp2.addData(RR2,cycle2, "2cycle");
 	
-
-	R = R2; //findInstability(R2, 4);
-	double [] cycle4Guess = getLastValues(1, 4,nIter);
+	R = R2;
+	double [] cycle4Guess = getLastValues(1, 4,10);
 	double [] cycle4 = findFixedPoints(cycle4Guess);
-	for (int i=0; i<4; i++) {
-	    // RR4[i] = R;
-	    hLine(cycle4[i], R0, rMax, gp2);
-	}
-	vLine(R, 0, 1, gp2);
-	// gp2.addData(RR4,cycle4, "4cycle");
 
-	// third task
+	// vLine(R1, 0,1, gp2);
+	// vLine(R2, 0,1, gp2);
 
 
 	// fourth task
