@@ -313,7 +313,7 @@ public class LogisticMap2 extends P251Applet {
 	double [] cycle2 = findFixedPoints(cycle2Guess);
 	
 	R = R2;
-	double [] cycle4Guess = getLastValues(1, 4,10);
+	double [] cycle4Guess = getLastValues(1,4,10);
 	double [] cycle4 = findFixedPoints(cycle4Guess);
 
 	// vLine(R1, 0,1, gp2);

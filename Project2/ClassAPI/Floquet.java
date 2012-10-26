@@ -28,7 +28,7 @@ public class Floquet extends P251Applet {
     double rMax = 4;    // maximum value for r to be checked against
 
 
-    int nR = (int) ((rMax-R0) / rStep);
+    int nR = (int) ((rMax-R0) / rStep); // the number of R values to look at
     int iterate = 1;           // iterate of f
 
     /****** Calculation variables and arrays ******/
@@ -49,7 +49,7 @@ public class Floquet extends P251Applet {
     double f (double x) {
 	return R * x * (1 - x);
 	// return R * (-1 * Math.abs(x-.5) + .5);
-	// return R * .25 * x * (1 - x) * (2 - x) * (3 - x);
+	// return R * .25 * (1-x) * (2-x) * (3-x);
     }
 
     double iterf (double x, int n) {
