@@ -300,7 +300,7 @@ public class LogisticMap2 extends P251Applet {
 	
 	while (R<rMax) {
 	    plotXvsR();
-	    R += rStep;	    
+	    R += rStep;	    pp
 	    if (Thread.interrupted()) return;
 	}
 
@@ -321,6 +321,7 @@ public class LogisticMap2 extends P251Applet {
 
 
 	// fourth task
+
 
 
 	// fifth task
