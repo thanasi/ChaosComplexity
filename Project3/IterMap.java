@@ -15,7 +15,11 @@ public class IterMap extends P251Applet {
     double epsilon = 1e-6;  // delta for use in numerical deriv
 
     int nR;              // number of rsk to look for
-    double [] roots;        // discovered roots
+    double delta;        // scaling parameter for r
+    double alpha;        // scaling parameter for y
+
+    double [] roots;     // discovered roots
+    double [] y;         // value of iterf half way through a 2^k cycle
 
     inputPanel ip1;
 
@@ -38,6 +42,7 @@ public class IterMap extends P251Applet {
 
     double F (double r, int k) {
 	// function used for optimization of r when x=.5
+        // 
 	double ans = iterf(.5, r, (int) Math.pow(2,k)) - .5;
 	for (int i=0; i<nR; i++){
 	    ans /= (r-roots[i]);
@@ -87,6 +92,7 @@ public class IterMap extends P251Applet {
 
 	ip1.addField("nR", 10);
 	addPanel(ip1);
+	initValues();
 
     }
 
@@ -95,6 +101,7 @@ public class IterMap extends P251Applet {
 	
 	nR = 10;
 	roots = new double[nR];
+	y = new double[nR];
 	// set roots to 1 so as not to cause overflow on divide
 	for (int i=0; i<nR; i++) roots[i] = 1;
 
@@ -105,6 +112,7 @@ public class IterMap extends P251Applet {
 	// read input panel values
 	nR = (int) ip1.getValue(0);
 	roots = new double[nR];
+	y = new double[nR];
 	// set roots to 1 so as not to cause overflow on divide
 	for (int i=0; i<nR; i++) roots[i] = 1;
 	
@@ -112,21 +120,31 @@ public class IterMap extends P251Applet {
 
     public void compute() {
 
-	double rg;
+	double rg; // r guess for root finding
 
 	// solved for first two analytically
 	roots[0] = 2;
 	roots[1] = 1 + Math.sqrt(5);
+
+	System.out.println("k\tr_sk\td\ty\ta");
+
+	// solve details of k=0,1 cases outside of the loop
 	int k = 0;
-	System.out.println(String.format("k= %02d\tr_sk= %4.4f", k+1, roots[k]));
+	y[k] = iterf(.5, roots[k], (int) Math.pow(2,k-1));
+	System.out.println(String.format("%02d\t%4.4f\t--\t%4.4f\t", k+1, roots[k], y[k]));
+
 	k = 1;
-	System.out.println(String.format("k= %02d\tr_sk= %4.4f", k+1, roots[k]));
-
-
+	y[k] = iterf(.5, roots[k], (int) Math.pow(2,k-1));
+	System.out.println(String.format("%02d\t%4.4f\t--\t%4.4f\t", k+1, roots[k], y[k]));
+	
+	// for each k, figure out r_sk, delta, y, alpha
 	for (k=2; k<nR; k++) {
 	    rg = roots[k-1] + .1 * (roots[k-1] - roots[k-2]);
 	    roots[k] = rootR(rg, k);
-	    System.out.println(String.format("k= %02d\trg= %4.4f\tr_sk= %4.4f", k+1, rg, roots[k]));
+	    delta = (roots[k-1] - roots[k-2]) / (roots[k]-roots[k-1]);
+	    y[k] = iterf(.5, roots[k], (int) Math.pow(2,k-1));
+	    alpha = - (y[k-1] - y[k-2]) / (y[k] - y[k-1]);
+	    System.out.println(String.format("%02d\t%4.4f\t%4.4f\t%4.4f\t%4.4f", k+1, roots[k], delta, y[k], alpha));
 
 	    if (Thread.interrupted()) return;
 	}
