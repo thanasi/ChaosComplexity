@@ -63,7 +63,8 @@
 
 To begin understand the scaling properties in period-doubling systems, I looked at the familiar iterative map defined by
 $$ f_r (x) = r x (1-x). $$
-As shown in \ttt{IterMap.java}, I used Newton's method to find out when $f^{(2^k)}_r (x_m) = x_m.$ Finding the $\tilde{r}_k$ that satisfy this condition for each $k$ yields a sequence that must converge to the same value, $r_\infty$, as the $r_k$ which are the bifurcation points of $f$. To understand how $r_k\to r_\infty$, the ratio $\delta$ can be calculated as a scaling parameter. A similar parameter $\alpha$ can also be calculated, which describes the scaling of $f\to f_{r_\inf}$ by tracking the parameter. The calculated results are shown in the following table:
+
+As shown in \ttt{IterMap.java}, I used Newton's method to find out when $f^{(2^k)} _r (x_m) = x_m.$ Finding the $\tilde{r}_k$ that satisfy this condition for each $k$ yields a sequence that must converge to the same value, $r_\infty$, as the $r_k$ which are the bifurcation points of $f$. To understand how $r_k\rightarrow r_\infty$, the ratio $\delta$ can be calculated as a scaling parameter. A similar parameter $\alpha$ can also be calculated, which describes the scaling of $f\rightarrow f_{r_\infty}$ by tracking the parameter. The calculated results are shown in the following table:
 
 \begin{center}
 \begin{tabular}{|c|c|c|c|c|}
@@ -107,16 +108,17 @@ $k$&$\delta$&$\alpha$\\
 \end{tabular}
 \begin{figure}[!h]
 \centering
-\includegraphics[width=.8\textwidth]{IterMap2.png}
+\includegraphics[width=.5\textwidth]{IterMap2.png}
 \end{figure}
 \end{center}
 
 
 \section{Renormalization Groups}
 
-The emergent universality in the scaling of iterated maps begs the question of how odd our function can be and still behave similarly. To check this, I used a function with a $3/2$ power cusp defined by $$f(x) = r\left( (\frac{1}{2})^{3/2} - |x-\frac{1}{2}|^{1}{2}  \right).$$ Performing the same calculations as below yielded the table and bifurcation diagram below (see \ttt{IterMap3.java}):
+The emergent universality in the scaling of iterated maps begs the question of how odd our function can be and still behave similarly. To check this, I used a function with a $3/2$ power cusp defined by $$f(x) = r\left( (\frac{1}{2})^{3/2} - |x-\frac{1}{2}|^\frac{1}{2}  \right).$$ Performing the same calculations as below yielded the table and bifurcation diagram below (see \ttt{IterMap3.java}):
 
-\begin{center}
+\begin{centering}
+\begin{figure}[!h]
 \begin{tabular}{|c|c|c|}
 \hline
 $k$&$\delta$&$\alpha$\\
@@ -133,14 +135,16 @@ $k$&$\delta$&$\alpha$\\
 10&3.8005&3.3887\\
 \hline
 \end{tabular}
+\end{figure}
+
 \begin{figure}[!h]
-\centering
-\includegraphics[width=.8\textwidth]{IterMap3.png}
+\includegraphics[width=.5\textwidth]{IterMap3.png}
 \end{figure}
 \end{center}
 
-
-The surprising result here is that the power laws governing approach to $r_\infty$ are have different coefficients than for the logistic map! However, this may not be as crazy as it seems. The derivation of $g(r)$ is the same for all functions $f$ with a single maximum, however, there is an assumption that we used in the estimation of the scaling exponents which is no longer valid. In it, we approximated that $g(z)$ the limiting function of $f$ as $r\to r_\infty$ could be approximated as $$g(z)\approx A + Bz^2$$ near $z=0$ because of the quadratic maximum. However, this expansion is not the right expansion for $g$ when $f$ is the cusped function above. In this case, we must approximate $$g(x)\approx A + B|z|^{3/2}.$$
+The surprising result here is that the power laws governing approach to $r_\infty$ are have different coefficients than for the logistic map! However, this may not be as crazy as it seems. The derivation of $g(r)$ is the same for all functions $f$ with a single maximum, however, there is an assumption that we used in the estimation of the scaling exponents which is no longer valid. In it, we approximated that $g(z)$ the limiting function of $f$ as $r\rightarrow r_\infty$ could be approximated as 
+$$g(z)\approx A + Bz^2$$ 
+near $z=0$ because of the quadratic maximum. However, this expansion is not the right expansion for $g$ when $f$ is the cusped function above. In this case, we must approximate $$g(x)\approx A + B|z|^{3/2}.$$
 
 All other assumptions that led to the Feigenbaum equation were valid, and thus we can use this minor adjustment to reevaluate our expectations for $\alpha$ in this new system.
 
@@ -149,12 +153,12 @@ Feigenbaum can take the form $$g(z) = -\alpha g(g(-z/\alpha)).$$ With this equat
 \begin{eqnarray*}
 g(z) & = & A - B|z|^{3/2} \\
 g(g(z)) & = & A - B|A - B|z|^{3/2}|^{3/2}\\
- & = & A - BA^{3/2}|1-\frac{B}{A}|z|^{3/2}
+ & = & A - BA^{3/2}|1-\frac{B}{A}|z|^{3/2}|^{3/2}
 \end{eqnarray*}
 
-At this point, we can exploit the fact that $z$ is small, and expand the term inside the absolute values as $(1+\epsilon)^{3/2}\approx 1 + \frac{3}{2}\epsilon.$ Doing this and substituting into the Feigenbaum eq. we find that
+At this point, we can exploit the fact that $z$ is small, and expand the term inside the absolute values as $(1+\epsilon)^{3/2} \approx 1 + \frac{3}{2}\epsilon.$ Doing this and substituting into the Feigenbaum eq. we find that
 
-$$ A - B|z|^{3/2} = -\alpha A + \alpha B A^{3/2} (1 - \frac{3B}{2A\alpha^{3/2}} |z|^{3/2})}
+$$ A - B|z|^{3/2} = -\alpha A + \alpha B A^{3/2} (1 - \frac{3B}{2A\alpha^{3/2}} |z|^{3/2}) $$
 
 Equating the coefficients of like terms, we find that 
 \begin{eqnarray*}
@@ -171,7 +175,7 @@ $$\alpha \approx 3.65.$$
 Comparing this to the value attained by iteration, we find a discrepancy of less than $10\%$.
 To improve the agreement, the approximate Feigenbaum equation could include higher order terms.
 
-Regardless of numerical precision, the existence of a second scaling behavior supports the existence of Universality classes, which can broadly describe the behavior of certain functions that meet requirements specific to the class. Here we have seen a new universality class of functions with $3/2$ power law cusps. While the period doubling and convergence to $r_\inf$ behavior are the same as for functions with quadratic maxima, the manner in which they converge differs significantly.
+Regardless of numerical precision, the existence of a second scaling behavior supports the existence of Universality classes, which can broadly describe the behavior of certain functions that meet requirements specific to the class. Here we have seen a new universality class of functions with $3/2$ power law cusps. While the period doubling and convergence to $r_\infty$ behavior are the same as for functions with quadratic maxima, the manner in which they converge differs significantly.
 
 \newpage
 \section{Code}
