@@ -122,7 +122,7 @@ public class LogisticMap2 extends P251Applet {
 	}
 	return output;	
     }
-   
+
     double [] findFixedPoints(double [] guess) {
 	// find the fixed points of an iterative of f
 	// the iterative is determined by the length of the guess array

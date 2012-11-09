@@ -1,10 +1,10 @@
-// IterMap.java
-// Study the convergence of r_k in the logistic map
+// IterMap3.java
+// Study the convergence of r_k in the cusped map
 
 import javax.swing.*;
 import P251.*;
 
-public class IterMap extends P251Applet {
+public class IterMap3 extends P251Applet {
     
     /***********************/
     /****** VARIABLES ******/
@@ -21,9 +21,16 @@ public class IterMap extends P251Applet {
     double [] roots;     // discovered roots
     double [] y;         // value of iterf half way through a 2^k cycle
 
-    double xMax = .5;    // x where maximum occurs for logistic map
+    double X0 = .5;    // initialize X0 for iteration at startup
+
+    double xMax = .5;   // x where maximum occurs for f
+    double rMin = .9;  // just before the first bifurcation
+    double rMax = 2.82; // once f leaves the range of interest
+    double rStep;       // how finely to look at r in the bifurcation map
 
     inputPanel ip1;
+    graphPanel gp1;
+
 
     /*********************/
     /****** METHODS ******/
@@ -32,8 +39,8 @@ public class IterMap extends P251Applet {
     /***** Custom Math Functions *****/
 
     double f (double x, double r) {
-	// logistic map
-	return r * x * (1 - x);
+	// cusp map
+	return r * ( Math.pow(.5, 1.5) - Math.pow(Math.abs(x-.5), 1.5) );
     }
 
     double iterf (double x, double r, int n) {
@@ -45,13 +52,11 @@ public class IterMap extends P251Applet {
     double F (double r, int k) {
 	// function used for optimization of r when x=xMax
         // 
-	double ans = iterf(.5, r, (int) Math.pow(2,k)) - xMax;
+	double ans = iterf(xMax, r, (int) Math.pow(2,k)) - xMax;
 	for (int i=0; i<nR; i++){
 	    ans /= (r-roots[i]);
 	}
-
-	return ans;
-	    
+	return ans;  
     }
 
     double dFdr (double r, int k){
@@ -86,14 +91,54 @@ public class IterMap extends P251Applet {
 	return r;
     }
 
+    double [] getLastValues(double r, int num, int nit) {
+	// get the last num values of f
+	// after iterating nit times
+	double [] output = new double[num];
+	double X = X0;
+	for (int i=0; i<nit; i++) {
+	    X = f(X, r);
+	    if (i>nit-num-1) {
+		output[i + num - nit] = X;
+	    }
+	}
+	return output;	
+    }
+
+
+    /****** Plotting Methods ******/
+    void plotBifurcations(double rStep, graphPanel gp, int nKeep, int nIter){
+	gp.clear();
+	double [] RR = new double[nKeep];
+	double [] XX = new double[nKeep];
+
+	double R = rMin;
+	while (R<=rMax) {
+	    XX = getLastValues(R, nKeep, nIter);
+	    for (int i = 0; i<nKeep; i++) RR[i] = R;
+	    
+	    gp.addData(RR, XX, "bifurcation");
+	    R += rStep;
+	    if (Thread.interrupted()) return;
+	}
+    }
+
     /****** P251Applet Methods ******/
     public void fillPanels() {
 	// define the panels for human interaction
 	ip1 = new inputPanel();
 
 	ip1.addField("nR", 10);
+	ip1.addField("rStep", .001);
 	addPanel(ip1);
 	initValues();
+
+	gp1 = new graphPanel(600, 300, false);
+	
+	gp1.setXLabel("R");
+	gp1.setYLabel("f(X)");
+	gp1.setTitle("Bifurcation Diagram");
+	addPanel(gp1);
 
     }
 
@@ -101,6 +146,7 @@ public class IterMap extends P251Applet {
 	// set up initial values
 	
 	nR = 10;
+	rStep = .001;
 	roots = new double[nR];
 	y = new double[nR];
 	// set roots to 1 so as not to cause overflow on divide
@@ -111,6 +157,7 @@ public class IterMap extends P251Applet {
     public void readValues() {
 	// read input panel values
 	nR = (int) ip1.getValue(0);
+	rStep = ip1.getValue(1);
 	roots = new double[nR];
 	y = new double[nR];
 	// set roots to 1 so as not to cause overflow on divide
@@ -122,35 +169,39 @@ public class IterMap extends P251Applet {
 
 	double rg; // r guess for root finding
 
-	// solved for first two analytically
-	roots[0] = 2;
-	roots[1] = 1 + Math.sqrt(5);
+	// solved for first analytically 
+	roots[0] = Math.pow(2, .5);
 
-	System.out.println("\nk\tr_sk\td\ty\ta");
+	System.out.println("\nk\td\ta");
 
 	// solve details of k=0,1 cases outside of the loop
 	int k = 0;
-	y[k] = iterf(.5, roots[k], (int) Math.pow(2,k-1));
-	System.out.println(String.format("%02d\t%4.4f\t--\t%4.4f\t--", k+1, roots[k], y[k]));
+	y[k] = iterf(xMax, roots[k], (int) Math.pow(2,k-1));
+	System.out.println(String.format("%02d\t--\t--", k+1));
 
 	k = 1;
-	y[k] = iterf(.5, roots[k], (int) Math.pow(2,k-1));
-	System.out.println(String.format("%02d\t%4.4f\t--\t%4.4f\t--", k+1, roots[k], y[k]));
+	rg = roots[k-1] * 1.1;
+	roots[k] = rootR(rg, k);
+	y[k] = iterf(xMax, roots[k], (int) Math.pow(2,k-1));
+	System.out.println(String.format("%02d\t--\t--", k+1));
 	
-
-
 	// for each k, figure out r_sk, delta, y, alpha
 	for (k=2; k<nR; k++) {
 	    rg = roots[k-1] + .1 * (roots[k-1] - roots[k-2]);
 	    roots[k] = rootR(rg, k);
 	    delta = (roots[k-1] - roots[k-2]) / (roots[k]-roots[k-1]);
-	    y[k] = iterf(.5, roots[k], (int) Math.pow(2,k-1));
+	    y[k] = iterf(xMax, roots[k], (int) Math.pow(2,k-1));
 	    alpha = - (y[k-1] - y[k-2]) / (y[k] - y[k-1]);
-	    System.out.println(String.format("%02d\t%4.4f\t%4.4f\t%4.4f\t%4.4f", k+1, roots[k], delta, y[k], alpha));
+	    System.out.println(String.format("%02d\t%4.4f\t%4.4f", k+1, delta, alpha));
 
 	    if (Thread.interrupted()) return;
 
 	}
+
+	plotBifurcations(rStep, gp1, 100, 1000);	
+
+	
+
 	
     }
 
