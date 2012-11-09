@@ -51,7 +51,7 @@ public class IterMap2 extends P251Applet {
 
     double F (double r, int k) {
 	// function used for optimization of r when x=xMax
-        // 
+
 	double ans = iterf(xMax, r, (int) Math.pow(2,k)) - xMax;
 	for (int i=0; i<nR; i++){
 	    ans /= (r-roots[i]);
