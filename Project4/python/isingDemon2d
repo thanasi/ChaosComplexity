@@ -1,0 +1,126 @@
+#!/usr/local/bin/python
+
+import numpy as np
+import scipy as sp
+import pylab as pl
+
+#### Variable Definitions ####
+
+J = 1   # Exchange constant
+H = 1   # External field coupling
+
+Ed = 0               # demon energy
+Es = 0               # sytem energy
+ssize = (10,10)    # system size
+
+# initialize the system
+system = np.zeros(ssize)
+
+nsteps = 0
+
+
+def LatticeEnergy(sys):
+
+    global J, H, Ed, Es, ssize
+    
+    # calculate the lattice energy of the system
+
+    energy = 0
+
+    # use torodial boundary conditions
+
+    # calculate energy from lattice interactions
+    energy -= J * (sys * np.roll(sys, 1, 0) + 
+                   sys * np.roll(sys,-1, 0) + 
+                   sys * np.roll(sys, 1, 1) + 
+                   sys * np.roll(sys,-1, 1)).sum()
+    
+    # calculate energy from external field
+    energy -= H * sys.sum()
+
+    return energy
+
+
+def stepSystem(sys):
+
+    global J, H, Ed, Es, ssize, nsteps
+    
+    # step the system
+    i = np.random.randint(0, ssize[0])
+    j = np.random.randint(0, ssize[1])
+
+    nsteps += 1
+    
+    testsystem = sys.copy()
+
+    E0 = LatticeEnergy(sys)
+    
+    testsystem[i,j] *= -1
+
+    dE = LatticeEnergy(testsystem) - E0
+
+    if dE < 0:              # if the transition gives lower energy
+        Ed -= dE            # give the excess to the demon
+        Es = LatticeEnergy(testsystem)
+        print "%d --> %d" % (E0, Es)
+
+
+        return testsystem   # and keep the transition
+    
+    else:                   # if the transition gives higher energy
+        if Ed >= dE:        # and the demon has enough energy 
+            Ed -= dE        # then use his energy
+            Es = LatticeEnergy(testsystem)
+            print "%d --> %d" % (E0, Es)
+            return testsystem  # and keep the transition
+        else:
+            return sys        
+
+
+if __name__ == "__main__":
+    
+    # set up pylab settings
+    pl.rcParams['image.interpolation'] = 'nearest'
+    pl.ion()
+
+    # set up system
+    system = np.random.randint(-1, 1, ssize)
+    system[system < 0] = -1
+    system[system >= 0] = 1
+
+    Ed = 0
+    Es = LatticeEnergy(system)
+
+    print "Ed = %d\nEs = %d" % (Ed, Es)
+    
+    pl.subplot(211)
+    pl.imshow(system)
+    pl.subplot(212)
+    pl.scatter(nsteps, Es, c="b", marker="x")
+    pl.scatter(nsteps, Ed, c="r", marker="+")
+
+    a = raw_input("NSteps? (q to quit) ")
+    nsteps = 0
+
+    pl.figure(0)
+
+    while (a != "q"):
+
+        try:
+            a = int(a)
+
+            for i in range(a):
+                system = stepSystem(system)              
+
+            print "n = %d\nEd = %d\nEs = %d" % (nsteps,Ed, Es)
+
+            pl.subplot(211)
+            pl.imshow(system)
+            pl.subplot(212)
+            pl.scatter(nsteps, Es, c="b", marker="x")
+            pl.scatter(nsteps, Ed, c="r", marker="+")
+
+        except ValueError:
+            pass     
+
+        a = raw_input("NSteps? (q to quit) ")

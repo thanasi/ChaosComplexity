@@ -1,0 +1,56 @@
+#!/usr/local/bin/python
+#
+# use the Metropolis Algorithm to 
+# sample the Ising model
+#
+
+import numpy as np
+import scipy as sp
+import pylab as pl
+
+
+### Global Variables ###
+J = 1   # strength of lattice interactions
+H = 1   # strength of external field
+L = 16  # lattice linear dimension
+T = 2   # bath temperature
+
+
+
+def Energy(system):
+    ''' return the energy for system according to the Ising model '''
+    
+
+
+    energy = 0
+    # use periodic boundary conditions (hence np.roll)
+    # calculate energy from lattice interactions
+    energy -= J * (sys * np.roll(sys, 1, 0) + 
+                   sys * np.roll(sys,-1, 0) + 
+                   sys * np.roll(sys, 1, 1) + 
+                   sys * np.roll(sys,-1, 1)).sum()
+    
+    # calculate energy from external field
+    energy -= H * sys.sum()
+
+    return energy
+
+
+def A():
+    pass
+
+def omega(system):
+    pass
+
+
+def initialize(system):
+    pass
+    
+
+def step(system):
+    pass
+
+
+
+if __name__ == "__main__":
+
