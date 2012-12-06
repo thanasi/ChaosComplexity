@@ -126,6 +126,7 @@ public class Ising extends P251Applet {
     } // end initial
 
 
+
     public int getIndex(int dE) {
 	if (dE == -8) return 0;
 	else if (dE == -4) return 1;
