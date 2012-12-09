@@ -60,14 +60,14 @@ public class IsingCheckMetropolis extends P251Applet {
     /****** Ising Model Methods ******/  
     public void initializeLattice() {
 	
-	for (int i=0; i<L; i++) {
-	    for (int j=0; j<L; j++) {
-		rnd = Math.random();
-		if (rnd<0.5) spin[i][j] = 1;
-		else spin[i][j] = -1;
-		M += system[i][j];
-	    } // end for..j
-	} // end for..i
+		for (int i=0; i<L; i++) {
+	    	for (int j=0; j<L; j++) {
+				rnd = Math.random();
+				if (rnd<0.5) spin[i][j] = 1;
+				else spin[i][j] = -1;
+				M += system[i][j];
+	    	} // end for..j
+		} // end for..i
     } // end initializeLattice()
       
     public void initial() {
@@ -153,34 +153,14 @@ public class IsingCheckMetropolis extends P251Applet {
 	addPanel(gp1);
 
 	for (int i = 0; i<16; i++) range16[i] = i+1;
-	readValues();
 
     } // end fillPanels
   
     public void compute() {
-
-	for (int i=0; i<16; i++) microstates[i] = 0;
-
-	for (int i=0; i<1600000; i++) {
-	    idx = 0;
-	    initializeLattice();
-
-	    // binary math to determine index
-	    if (spin[0][0] == 1) idx += 1;
-	    if (spin[0][1] == 1) idx += 2;
-	    if (spin[1][0] == 1) idx += 4;
-	    if (spin[1][1] == 1) idx += 8;
-
-	    // count the appropriate microstructure
-	    microstates[idx] += 1;
-	    	    
-	    
-	} // end check
 	
-	gp1.addData(range16, microstates, "i");
-	System.out.print("\n");
-	for (int i=0; i<16; i++) System.out.print(microstates[i] + "\t");
-	System.out.print("\n");
+	
+	
+	
     } // end compute 
     
     
