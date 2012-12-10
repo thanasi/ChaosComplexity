@@ -17,7 +17,7 @@
 */
 
 
-// Ising.java
+// IsingEq.java
 // 2D ising model on a square lattice
 // using Metropolis algorithm
 // translated from BASIC as presented in 
@@ -25,6 +25,8 @@
 // Gould & Tobochnik 
 // _Intro to Computer Simulation Methods_
 // Ch 17
+
+// determine equilibration time in Ising model
 
 import javax.swing.*;
 import java.awt.Color;

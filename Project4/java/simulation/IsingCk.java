@@ -6,9 +6,9 @@
 <body>
 
 <applet
-   code="IsingSc.class",
+   code="IsingCk.class",
    archive="jcommon.jar, jfreechart.jar, P251Applet.jar",
-   height=450, width=750>
+   height=300, width=900>
 </applet>
 <hr/>
 
@@ -17,7 +17,7 @@
 */
 
 
-// IsingSc.java
+// IsingCk.java
 // 2D ising model on a square lattice
 // using Metropolis algorithm
 // translated from BASIC as presented in 
@@ -26,31 +26,30 @@
 // _Intro to Computer Simulation Methods_
 // Ch 17
 
-// study scaling behavior of Ising model
+// check sampling probabilities for Ising code
 
 import javax.swing.*;
 import java.awt.Color;
 import P251.*;
 
-public class IsingSc extends P251Applet {
+public class IsingCk extends P251Applet {
 
 	// Easy access to default values
-	int defneq = 250;		// at T=2, takes about 250 steps to clearly equilibrate
-	int defmcs = 10;		// collect data over 10 monte carlo steps (shouldn't matter once in equil.)
-	int defrep = 100;		// run this for 50 systems
-	int defL = 256;			// run for a 256x256 system
-	double defT = 2;			// run at T=2
-	int defF = 0;			// random fill
+	int defneq = 4;			
+	int defmcs = 10;		
+	int defrep = 10000;		
+	int defL = 2;			
+	double defT = 2;		
+	int defF = 0;			
 	
-	int rOff=3;   // r offset
-	int rStep=1;  // step size when going through S(R)
-	int nSS=50;   // how many values of R to probe
-    
     /****** Global Variables ******/
 
     inputPanel ip1,ip2;
     drawPanel dp1;
     graphPanel gp1, gp2;
+
+ 	double g1x[], g1y[], g2x[], g2y[]; // x and y data for gp1 and gp2
+
 
     Color c;
 
@@ -63,6 +62,8 @@ public class IsingSc extends P251Applet {
     int N; 		// number of spins LxL
     double T;      // bath temperature
     int M;      // magnetization
+
+	int NUp;	// number of up spins in the lattice
 
 	int R;		// radius to calculate spatial correlations
 
@@ -269,21 +270,33 @@ public class IsingSc extends P251Applet {
 		system = new int[L][L];
 		N = L * L;
 		
-		SS = new double[nSS];
-		RR = new double[nSS];
-		for (int i=0;i<nSS;i++) SS[i] = 0;
-	
-		dp1 = new drawPanel(256,256, 0,0, 256,256);
-		dp1.setDrawBounds(0,0,L,L);
+		g1x = new double [5];
+		g1y = new double [5];
+		g2x = new double [5];
+		g2y = new double [5];
 		
+
+		for (int i=0;i<5;i++) {
+			g1x[i] = i;
+			g2x[i] = i;
+			g1y[i] = 0;
+			g2y[i] = 0;
+		}
+	
 		gp1 = new graphPanel(400,250, true);
 		gp1.setDotSize(3);
-		gp1.setXLabel("log(R)");
-		gp1.setYLabel("log(S(R))");
-		gp1.setTitle("Spatial Correlation");
+		gp1.setXLabel("N_up");
+		gp1.setYLabel("P(N_up)");
+		gp1.setTitle("Sampling Probabilities for Initial Lattice");
+		
+		gp2 = new graphPanel(400,250,true);
+		gp2.setDotSize(3);
+		gp2.setXLabel("N_up");
+		gp2.setYLabel("P(N_up)");
+		gp2.setTitle("Sampling Probabilities after 500 Metropolis Steps");
 
-		addPanel(dp1);
 		addPanel(gp1);
+		addPanel(gp2);
 
 
     } // end fillPanels
@@ -295,61 +308,49 @@ public class IsingSc extends P251Applet {
 	} // end readValues
 
     public void compute() {
+		for (int i=0;i<5;i++) {
+			g1x[i] = i;
+			g2x[i] = i;
+			g1y[i] = 0;
+			g2y[i] = 0;
+		}
 		
-		for (int tt=0; tt<5; tt++) {
+		for (int t=0; t<repeat; t++) {
+			System.out.println("System " + (t+1) + "/" + repeat + " @ T = " + T);
+			initial();
 			
-			T = 1.5 + tt*.25;
-		
-			for (int i=0;i<nSS;i++){
-				SS[i] = 0;
-				RR[i] = 0;
+			// calculate initial configuration
+			NUp = getNUp();
+			g1y[NUp] += 1;
+			
+			for (int i=0; i<nequil; i++) Metropolis();
+			initialize();
+			
+			for (int i=0; i<mcs; i++) {
+				Metropolis();
+		    	data();
+				if (Thread.interrupted()) return;
 			}
+			
+			NUp = getNUp();
+			g2y[NUp] += 1;
+		}
 		
-			// repeat this sequence to build up ensemble statistics for S(R)
-			for (int t=0; t<repeat; t++) {
-				System.out.println("System " + (t+1) + "/" + repeat + " @ T = " + T);
-				initial(); // initialize the system
-				for (int i = 0; i<nequil; i++) Metropolis();  // equilibriate the system
-				initialize(); // clear the tracking variables
-				for (int i = 0; i<mcs; i++) {   // run the Metropolis for data
-			    	Metropolis();
-			    	data();
-					if (Thread.interrupted()) return;
-				}
+		for (int i=0; i<5; i++) {
+			g2y[i] = 1.0 * g2y[i] / repeat;
+			g1y[i] = 1.0 * g1y[i] / repeat;		
+		}
+		
+		System.out.println(String.format("\n\nInitial:\t%4.3f\t%4.3f\t%4.3f\t%4.3f\t%4.3f", g1y[0],g1y[1],g1y[2],g1y[3],g1y[4]));
+		System.out.println(String.format("\n\nEquilib:\t%4.3f\t%4.3f\t%4.3f\t%4.3f\t%4.3f", g2y[0],g2y[1],g2y[2],g2y[3],g2y[4]));
 
-				double Ea = 1.0*accum[0] / (mcs * N);
-				System.out.println("\t<E>=" + Ea);
-				// drawSystem();
-				// output();       // write out the results to the Console
-			
-				// calculate S(R) for 2 orders of magnitude in R
-				for (int i=0; i<nSS; i++){
-					R = i * rStep + rOff;
-					RR[i] = R;
-					SS[i] += S(R);
-				}
-			
-				// if (Thread.interrupted()) return;
-			
-			} // end repeat loop
+		gp1.addData(g1x,g1y,"T" + T);
+		gp2.addData(g2x,g2y,"T" + T);
 		
-			System.out.println("R,S(R)");
-			System.out.println(String.format("T=%3.2f,", T));
 		
-			// calculate average S over all runs
-			// and take the log to see the power law more clearly
-			for (int i=0; i<nSS; i++) {
-				SS[i] = Math.log(SS[i] / repeat - .5);
-				RR[i] = Math.log(RR[i]);
-			
-				// output results to plot formally and solve for the power law
-				System.out.println(String.format("%4.3f,%4.3f", RR[i], SS[i]));
-			}
 		
-			gp1.addData(RR,SS,"T"+T);
-				
-			drawSystem();   // draw the Ising system
-		} // end iterate through temperatures
+		
+		
     } // end compute
 
 } // end Ising
